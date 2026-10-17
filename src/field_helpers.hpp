@@ -22,11 +22,6 @@ inline void field_text(DecodedCommand& out, std::string name, std::string locati
     out.fields.push_back({std::move(name), std::move(location), std::move(raw), std::move(decoded),
                           std::move(meaning)});
 }
-inline void dword(DecodedCommand& out, const Command& c, unsigned index, std::string name,
-                  std::string decoded, std::string meaning) {
-    field(out, std::move(name), "CDW" + std::to_string(index) + "[31:0]", c[index],
-          std::move(decoded), std::move(meaning), 8);
-}
 inline std::string reserved_dwords_raw(const Command& c, unsigned first, unsigned last) {
     std::ostringstream out;
     for (unsigned i = first; i <= last; ++i) {

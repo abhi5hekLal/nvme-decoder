@@ -1,14 +1,23 @@
 # NVMe Decoder
 
-A portable C++ command-line tool for describing NVMe 64-byte command submission queue entries. The decoder library is separate from the CLI so a future UI can call the same parsing and decoding API.
+A portable C++ tool for describing NVMe 64-byte command submission queue entries. It includes a command-line interface and an optional Qt Quick desktop interface. Both use the same parsing and decoding library.
 
 ## Build
 
 Requires CMake 3.20 or newer and a C++20 compiler (GCC, Clang, or MSVC).
+The desktop interface also requires Qt 6.2 or newer with Quick, QML, and Quick Controls 2.
 
 ```sh
 cmake -S . -B build
 cmake --build build
+```
+
+When Qt is installed, CMake also creates `nvme-decoder-ui`. Run it with `./build/nvme-decoder-ui` on Linux, or `build\Debug\nvme-decoder-ui.exe` with a typical Visual Studio generator on Windows. If Qt is not found, the library and CLI still build normally.
+
+On Ubuntu, install the Qt development files and QML modules with:
+
+```sh
+sudo apt-get install qt6-base-dev qt6-declarative-dev qt6-declarative-dev-tools qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts
 ```
 
 Run `./build/nvme-decoder` (Windows: `build\Debug\nvme-decoder.exe` with a typical Visual Studio generator) and enter 16 hexadecimal dwords in order, CDW0 through CDW15. A `0x` prefix is optional; separate values with spaces, commas, or line breaks.
