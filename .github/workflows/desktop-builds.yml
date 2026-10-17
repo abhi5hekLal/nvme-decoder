@@ -44,7 +44,8 @@ jobs:
           cmake --debug-find-pkg=Qt6,Qt6Quick,Qt6Qml,Qt6QuickControls2 \
             -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
-            -DNVME_DECODER_BUILD_UI=ON
+            -DNVME_DECODER_BUILD_UI=ON \
+            -DNVME_DECODER_REQUIRE_QT=ON
           cmake --build build --config Release --target nvme-decoder-ui --parallel 2
 
       - name: Package AppImage

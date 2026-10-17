@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(nvme_decoder VERSION 0.1.0 LANGUAGES CXX)
 
 option(NVME_DECODER_BUILD_UI "Build the Qt Quick desktop interface when Qt is available" ON)
+option(NVME_DECODER_REQUIRE_QT "Fail configuration when the UI's Qt dependencies are unavailable" OFF)
 
 file(GLOB ADMIN_COMMAND_DECODERS CONFIGURE_DEPENDS src/commands/admin/*.cpp)
 file(GLOB NVM_COMMAND_DECODERS CONFIGURE_DEPENDS src/commands/nvm/*.cpp)
@@ -22,7 +23,11 @@ add_executable(nvme-decoder src/main.cpp)
 target_link_libraries(nvme-decoder PRIVATE nvme_decoder_lib)
 
 if(NVME_DECODER_BUILD_UI)
-    find_package(Qt6 6.2 QUIET COMPONENTS Quick Qml QuickControls2)
+    if(NVME_DECODER_REQUIRE_QT)
+        find_package(Qt6 6.2 REQUIRED COMPONENTS Quick Qml QuickControls2)
+    else()
+        find_package(Qt6 6.2 QUIET COMPONENTS Quick Qml QuickControls2)
+    endif()
 
     if(Qt6_FOUND)
         qt_add_executable(nvme-decoder-ui
