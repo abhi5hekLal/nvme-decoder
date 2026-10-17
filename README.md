@@ -23,7 +23,7 @@ When Qt is installed, CMake also creates `nvme-decoder-ui`. Run it with `./build
 On Ubuntu, install the Qt development files and QML modules with:
 
 ```sh
-sudo apt-get install libgl-dev libqt6opengl6-dev qt6-base-dev qt6-declarative-dev qt6-declarative-dev-tools qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts
+sudo apt-get install libgl-dev libqt6opengl6-dev qt6-base-dev qt6-declarative-dev qt6-declarative-dev-tools qml6-module-qtqml-workerscript qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts
 ```
 
 Run `./build/nvme-decoder` (Windows: `build\Debug\nvme-decoder.exe` with a typical Visual Studio generator) and enter 16 hexadecimal dwords in order, CDW0 through CDW15. A `0x` prefix is optional; separate values with spaces, commas, or line breaks.

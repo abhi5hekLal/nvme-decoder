@@ -28,6 +28,7 @@ jobs:
             qt6-base-dev \
             qt6-declarative-dev \
             qt6-declarative-dev-tools \
+            qml6-module-qtqml-workerscript \
             qml6-module-qtquick \
             qml6-module-qtquick-controls \
             qml6-module-qtquick-layouts
@@ -67,6 +68,7 @@ jobs:
             --icon-file app/nvme-decoder.svg \
             --plugin qt \
             --output appimage
+          test -d AppDir/usr/qml/QtQml/WorkerScript
           package_path="$(find . -maxdepth 1 -type f -name '*.AppImage' ! -name 'linuxdeploy-*' -print -quit)"
           test -n "$package_path"
           mv "$package_path" nvme-decoder-linux-x86_64.AppImage
