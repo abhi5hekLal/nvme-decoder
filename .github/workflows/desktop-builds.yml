@@ -31,6 +31,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends \
             libgl-dev \
+            libqt6opengl6-dev \
             qt6-base-dev \
             qt6-declarative-dev \
             qt6-declarative-dev-tools \
@@ -41,8 +42,7 @@ jobs:
       - name: Configure and build
         shell: bash
         run: |
-          cmake --debug-find-pkg=Qt6,Qt6Quick,Qt6Qml,Qt6QuickControls2 \
-            -S . -B build \
+          cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DNVME_DECODER_BUILD_UI=ON \
             -DNVME_DECODER_REQUIRE_QT=ON
