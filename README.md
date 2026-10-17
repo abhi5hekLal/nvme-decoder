@@ -9,7 +9,7 @@ The desktop interface also requires Qt 6.2 or newer with Quick, QML, and Quick C
 
 ## Desktop executables
 
-The GitHub Actions **Desktop builds** workflow creates a Linux x86-64 AppImage and a Windows x64 portable ZIP containing the application and its Qt runtime files. Open the workflow under the repository's **Actions** tab and download the artifact for your operating system. The workflow also runs when changes are pushed to `main` or a `v*` tag.
+The GitHub Actions **Desktop builds** workflow creates a Linux x86-64 AppImage automatically when changes are pushed to `main` or a `v*` tag. To build Windows, open **Actions → Desktop builds → Run workflow**, check **Build the Windows package instead of the Linux package**, and start the run. Download the `nvme-decoder-linux-x86_64` or `nvme-decoder-windows-x64` artifact from the completed run.
 
 The Linux AppImage can be launched directly on most current x86-64 Linux distributions. If needed, mark it executable first with `chmod +x nvme-decoder-linux-x86_64.AppImage`. On Windows, extract the ZIP and run `nvme-decoder-ui.exe` from the extracted folder.
 
@@ -23,7 +23,7 @@ When Qt is installed, CMake also creates `nvme-decoder-ui`. Run it with `./build
 On Ubuntu, install the Qt development files and QML modules with:
 
 ```sh
-sudo apt-get install qt6-base-dev qt6-declarative-dev qt6-declarative-dev-tools qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts
+sudo apt-get install libgl-dev libqt6opengl6-dev qt6-base-dev qt6-declarative-dev qt6-declarative-dev-tools qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts
 ```
 
 Run `./build/nvme-decoder` (Windows: `build\Debug\nvme-decoder.exe` with a typical Visual Studio generator) and enter 16 hexadecimal dwords in order, CDW0 through CDW15. A `0x` prefix is optional; separate values with spaces, commas, or line breaks.
