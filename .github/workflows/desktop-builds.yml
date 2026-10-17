@@ -7,12 +7,6 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
-    inputs:
-      build_windows:
-        description: Build the Windows package instead of the Linux package
-        required: false
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -20,7 +14,6 @@ permissions:
 jobs:
   linux:
     name: Linux AppImage
-    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.build_windows }}
     runs-on: ubuntu-22.04
     steps:
       - name: Check out source
@@ -87,7 +80,6 @@ jobs:
 
   windows:
     name: Windows portable package
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_windows }}
     runs-on: windows-2022
     steps:
       - name: Check out source

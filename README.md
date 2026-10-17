@@ -9,7 +9,7 @@ The desktop interface also requires Qt 6.2 or newer with Quick, QML, and Quick C
 
 ## Desktop executables
 
-The GitHub Actions **Desktop builds** workflow creates a Linux x86-64 AppImage automatically when changes are pushed to `main` or a `v*` tag. To build Windows, open **Actions → Desktop builds → Run workflow**, check **Build the Windows package instead of the Linux package**, and start the run. Download the `nvme-decoder-linux-x86_64` or `nvme-decoder-windows-x64` artifact from the completed run.
+The GitHub Actions **Desktop builds** workflow creates a Linux x86-64 AppImage and a Windows x64 portable ZIP automatically when changes are pushed to `main` or a `v*` tag. To build both manually, open **Actions → Desktop builds → Run workflow**. Download the `nvme-decoder-linux-x86_64` and `nvme-decoder-windows-x64` artifacts from the completed run.
 
 The Linux AppImage can be launched directly on most current x86-64 Linux distributions. If needed, mark it executable first with `chmod +x nvme-decoder-linux-x86_64.AppImage`. On Windows, extract the ZIP and run `nvme-decoder-ui.exe` from the extracted folder.
 
