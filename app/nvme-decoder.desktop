@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=NVMe Decoder
+Comment=Decode NVMe command dwords
+Exec=nvme-decoder-ui
+Icon=nvme-decoder
+Categories=Utility;Development;
+Terminal=false

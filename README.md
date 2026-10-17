@@ -7,6 +7,12 @@ A portable C++ tool for describing NVMe 64-byte command submission queue entries
 Requires CMake 3.20 or newer and a C++20 compiler (GCC, Clang, or MSVC).
 The desktop interface also requires Qt 6.2 or newer with Quick, QML, and Quick Controls 2.
 
+## Desktop executables
+
+The GitHub Actions **Desktop builds** workflow creates a Linux x86-64 AppImage and a Windows x64 portable ZIP containing the application and its Qt runtime files. Open the workflow under the repository's **Actions** tab and download the artifact for your operating system. The workflow also runs when changes are pushed to `main` or a `v*` tag.
+
+The Linux AppImage can be launched directly on most current x86-64 Linux distributions. If needed, mark it executable first with `chmod +x nvme-decoder-linux-x86_64.AppImage`. On Windows, extract the ZIP and run `nvme-decoder-ui.exe` from the extracted folder.
+
 ```sh
 cmake -S . -B build
 cmake --build build

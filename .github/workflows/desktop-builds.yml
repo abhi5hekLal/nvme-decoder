@@ -1,0 +1,115 @@
+name: Desktop builds
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux AppImage
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.10.2
+          host: linux
+          target: desktop
+          arch: gcc_64
+          modules: qtdeclarative
+
+      - name: Configure and build
+        shell: bash
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR" \
+            -DNVME_DECODER_BUILD_UI=ON
+          cmake --build build --config Release --target nvme-decoder-ui --parallel 2
+
+      - name: Package AppImage
+        shell: bash
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+          QML_SOURCES_PATHS: ${{ github.workspace }}/app/qml
+        run: |
+          mkdir -p AppDir/usr/bin AppDir/usr/share/applications AppDir/usr/share/icons/hicolor/scalable/apps
+          cp build/nvme-decoder-ui AppDir/usr/bin/nvme-decoder-ui
+          cp app/nvme-decoder.desktop AppDir/usr/share/applications/
+          cp app/nvme-decoder.svg AppDir/usr/share/icons/hicolor/scalable/apps/
+
+          curl --fail --location --retry 3 \
+            https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage \
+            --output linuxdeploy-x86_64.AppImage
+          curl --fail --location --retry 3 \
+            https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage \
+            --output linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
+
+          QMAKE="$QT_ROOT_DIR/bin/qmake" ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --executable AppDir/usr/bin/nvme-decoder-ui \
+            --desktop-file app/nvme-decoder.desktop \
+            --icon-file app/nvme-decoder.svg \
+            --plugin qt \
+            --output appimage
+          package_path="$(find . -maxdepth 1 -type f -name '*.AppImage' ! -name 'linuxdeploy-*' -print -quit)"
+          test -n "$package_path"
+          mv "$package_path" nvme-decoder-linux-x86_64.AppImage
+
+      - name: Upload Linux executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: nvme-decoder-linux-x86_64
+          path: nvme-decoder-linux-x86_64.AppImage
+          if-no-files-found: error
+
+  windows:
+    name: Windows portable package
+    runs-on: windows-2022
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.10.2
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: qtdeclarative
+
+      - name: Configure and build
+        shell: pwsh
+        run: |
+          cmake -S . -B build `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" `
+            -DNVME_DECODER_BUILD_UI=ON
+          cmake --build build --config Release --target nvme-decoder-ui --parallel 2
+
+      - name: Bundle Qt runtime and create ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist/nvme-decoder | Out-Null
+          Copy-Item build/Release/nvme-decoder-ui.exe dist/nvme-decoder/
+          windeployqt --release --qmldir app/qml dist/nvme-decoder/nvme-decoder-ui.exe
+          Compress-Archive -Path dist/nvme-decoder/* -DestinationPath nvme-decoder-windows-x64.zip -Force
+
+      - name: Upload Windows executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: nvme-decoder-windows-x64
+          path: nvme-decoder-windows-x64.zip
+          if-no-files-found: error
