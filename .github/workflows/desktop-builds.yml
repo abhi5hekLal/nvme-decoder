@@ -20,19 +20,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: 6.10.2
-          host: linux
-          target: desktop
-          arch: gcc_64
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            qt6-base-dev \
+            qt6-declarative-dev \
+            qt6-declarative-dev-tools \
+            qml6-module-qtquick \
+            qml6-module-qtquick-controls \
+            qml6-module-qtquick-layouts
 
       - name: Configure and build
         shell: bash
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR" \
             -DNVME_DECODER_BUILD_UI=ON
           cmake --build build --config Release --target nvme-decoder-ui --parallel 2
 
@@ -55,7 +57,7 @@ jobs:
             --output linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
 
-          QMAKE="$QT_ROOT_DIR/bin/qmake" ./linuxdeploy-x86_64.AppImage \
+          QMAKE="$(command -v qmake6)" ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
             --executable AppDir/usr/bin/nvme-decoder-ui \
             --desktop-file app/nvme-decoder.desktop \
